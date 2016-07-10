@@ -2,6 +2,7 @@
 called_path=${0%/*}
 stripped=${called_path#[^/]*}
 real_path=`pwd`$stripped
+dir=`dirname $0`
 #echo "called path: $called_path"
 #echo "stripped: $stripped"
 #echo "pwd: `pwd`"
@@ -9,7 +10,7 @@ real_path=`pwd`$stripped
 
 mode=$1
 if [ -z "$mode" ]; then
-    mode="../lib/CF/83NoSync"
+    mode="./lib/cf/"
 fi
 
 connstring=
@@ -18,4 +19,8 @@ USERPWD=
 #USERPWD=--db-user base --db-pwd 234567890
 #export RUNNER_ENV=production
 
-oscript $real_path/init.os init-dev --src "$real_path/$mode"
+pushd $dir
+oscript init.os init-dev --src "$mode"
+oscript init.os init-dev --dev --src "$mode"
+
+popd 
