@@ -30,17 +30,17 @@ node("slave") {
         if (isUnix){
             sh "${command}"
         } else {
-            bat "${command}"
+            bat "chcp 1251\n${command}"
         }
     }
 
     stage "build"
     echo "build catalogs"
     command = """oscript tools/runner.os compileepf ${v8version} --ibname /F"./build/ib" ./ ./build/out/ """
-    if (isUnix) {sh "${command}"} else {bat "${command}"}       
+    if (isUnix) {sh "${command}"} else {bat "chcp 1251 \n${command}"}       
     
     stage "test"
     command = """oscript tools/runner.os xunit "./build/out/Tests" ${v8version} --ibname /F"./build/ib" --path ./build/out/xddTestRunner.epf  --report ./build/report.xml"""
-    if (isUnix){ sh "${command}" } else {bat "${command}"}
+    if (isUnix){ sh "${command}" } else {bat "chcp 1251\n${command}"}
     step([$class: 'JUnitResultArchiver', testResults: '**/build/report.xml'])
 }
