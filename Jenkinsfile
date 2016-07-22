@@ -25,7 +25,7 @@ node("slave") {
     if (env.V8VERSION) {
         v8version = "--v8version ${env.V8VERSION}"
     }
-    def command = "oscript tools/init.os init-dev ${v8version} --src "+srcpath
+    def command = "oscript -encoding=utf-8 tools/init.os init-dev ${v8version} --src "+srcpath
     timestamps {
         if (isUnix){
             sh "${command}"
@@ -36,11 +36,11 @@ node("slave") {
 
     stage "build"
     echo "build catalogs"
-    command = """oscript tools/runner.os compileepf ${v8version} --ibname /F"./build/ib" ./ ./build/out/ """
+    command = """oscript -encoding=utf-8 tools/runner.os compileepf ${v8version} --ibname /F"./build/ib" ./ ./build/out/ """
     if (isUnix) {sh "${command}"} else {bat "${command}"}       
     
     stage "test"
-    command = """oscript tools/runner.os xunit "./build/out/Tests" ${v8version} --ibname /F"./build/ib" --path ./build/out/xddTestRunner.epf  --report ./build/report.xml"""
+    command = """oscript tools/runner.os -encoding=utf-8 xunit "./build/out/Tests" ${v8version} --ibname /F"./build/ib" --path ./build/out/xddTestRunner.epf  --report ./build/report.xml"""
     if (isUnix){ sh "${command}" } else {bat "${command}"}
     step([$class: 'JUnitResultArchiver', testResults: '**/build/report.xml'])
 }
